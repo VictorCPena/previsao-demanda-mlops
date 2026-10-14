@@ -4,6 +4,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+from datetime import timedelta
 
 os.environ.setdefault("MLFLOW_ENABLE_TELEMETRY", "false")
 os.environ.setdefault("MLFLOW_DISABLE_AGENT_HINT", "1")
@@ -137,11 +138,13 @@ def train(input_csv=None, work=None, output=None):
         "multi_day_limit": "Endpoint recursivo não foi validado para 7/14 dias; não reutilizar métricas de 1 dia.",
         "versions": model_versions}
     (output / "treinamento.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False))
-    development.loc[development.day >= development.day.max()-pd.Timedelta(days=99), FEATURES].to_csv(work / "reference_features.csv", index=False)
-    test.loc[test.day >= test.day.max()-pd.Timedelta(days=29), FEATURES].to_csv(work / "current_features.csv", index=False)
+    reference_start = pd.Timestamp(development.day.max().date() - timedelta(days=99))
+    current_start = pd.Timestamp(test.day.max().date() - timedelta(days=29))
+    development.loc[development.day >= reference_start, FEATURES].to_csv(work / "reference_features.csv", index=False)
+    test.loc[test.day >= current_start, FEATURES].to_csv(work / "current_features.csv", index=False)
     example_product = raw.product_id.iloc[0]
     history = raw[raw.product_id == example_product].tail(28)
-    request = {"product_id": example_product, "day": str((raw.day.max()+pd.Timedelta(days=1)).date()),
+    request = {"product_id": example_product, "day": (raw.day.max().date() + timedelta(days=1)).isoformat(),
                "promo": 0, "history": [{"day": str(r.day.date()), "units": int(r.units)}
                                          for r in history.itertuples()]}
     (output / "exemplo_requisicao.json").write_text(json.dumps(request, indent=2))

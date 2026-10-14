@@ -1,5 +1,6 @@
 """Demanda sintética diária: calendário e promoções conhecidas na previsão."""
 from pathlib import Path
+from datetime import timedelta
 
 import numpy as np
 import pandas as pd
@@ -84,7 +85,7 @@ def temporal_folds(frame, folds=3, validation_days=42, test_days=90):
     splits = []
     for i in range(folds):
         start = dev_days[-(folds-i)*validation_days]
-        end = start + pd.Timedelta(days=validation_days)
+        end = pd.Timestamp(start.date() + timedelta(days=int(validation_days)))
         train = development[development.day < start]
         valid = development[(development.day >= start) & (development.day < end)]
         splits.append((train, valid))
@@ -99,7 +100,7 @@ def next_features(product_id, history, day, promo):
         raise ValueError("Envie pelo menos 28 dias históricos únicos")
     if not consecutive_days(dates):
         raise ValueError("Histórico precisa estar ordenado e ser diário, sem lacunas")
-    if dates[-1] != day-pd.Timedelta(days=1):
+    if dates[-1] != pd.Timestamp(day.date() - timedelta(days=1)):
         raise ValueError("Histórico deve terminar no dia anterior à previsão")
     if not np.isfinite(values).all() or (values < 0).any():
         raise ValueError("Demanda histórica inválida")
