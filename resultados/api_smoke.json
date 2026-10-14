@@ -1,0 +1,52 @@
+{
+  "actual_trained_model_api": true,
+  "recursive_endpoint": true,
+  "promotion_and_rollback": true,
+  "mlflow_registered_model_loaded": true,
+  "first_prediction": {
+    "product_id": "P00",
+    "day": "2025-12-31",
+    "prediction": 30.554382118717626,
+    "lower90_empirical": 17.78643598030458,
+    "upper90_empirical": 43.32232825713067,
+    "model": "hist_gradient_boosting",
+    "version": "9",
+    "synthetic_training": true,
+    "interval_note": "Faixa empírica de resíduos de validação; cobertura não garantida."
+  },
+  "recursive_demo": {
+    "predictions": [
+      {
+        "day": "2025-12-31",
+        "prediction": 30.554382118717626
+      },
+      {
+        "day": "2026-01-01",
+        "prediction": 31.99996687822658
+      },
+      {
+        "day": "2026-01-02",
+        "prediction": 39.858532525929775
+      },
+      {
+        "day": "2026-01-03",
+        "prediction": 48.50446437920184
+      },
+      {
+        "day": "2026-01-04",
+        "prediction": 38.46678604718623
+      },
+      {
+        "day": "2026-01-05",
+        "prediction": 27.648601554656228
+      },
+      {
+        "day": "2026-01-06",
+        "prediction": 29.528636817918933
+      }
+    ],
+    "version": "9",
+    "mode": "recursive",
+    "validation_note": "Demonstração funcional; métricas do holdout valem apenas para rolling 1 dia."
+  }
+}

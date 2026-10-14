@@ -1,0 +1,32 @@
+name: CI | MLOps e inferencia
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      OMP_NUM_THREADS: '2'
+      OPENBLAS_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+      MLFLOW_ENABLE_TELEMETRY: 'false'
+      MLFLOW_DISABLE_AGENT_HINT: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+      - run: python -m pip install -r requirements.txt
+      - run: python -m pytest tests -q -W error::DeprecationWarning
+      - run: python src/train.py
+      - run: python src/monitor.py
+      - run: python src/smoke.py
+      - run: python src/summary_html.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evidencias-mlops
+          path: resultados/
+          if-no-files-found: warn

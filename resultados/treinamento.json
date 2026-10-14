@@ -1,0 +1,53 @@
+{
+  "synthetic_data": true,
+  "data_sha256": "cf08568790a0e8fba534ea53700b8895dee844c5d2cc5bf207e9b9bba189f4e3",
+  "winner_selected_by_cv": "hist_gradient_boosting",
+  "cv_mean_mae": {
+    "hist_gradient_boosting": 5.962151906778018,
+    "ridge": 7.196573177388051,
+    "seasonal_naive": 14.383597883597885
+  },
+  "holdout": {
+    "seasonal_naive": {
+      "mae": 13.4,
+      "rmse": 18.652971166367394,
+      "wape": 0.2555716455338537
+    },
+    "ridge": {
+      "mae": 6.987734667611346,
+      "rmse": 9.240629837453998,
+      "wape": 0.13327364533995434
+    },
+    "hist_gradient_boosting": {
+      "mae": 5.971990483177925,
+      "rmse": 7.663909052854059,
+      "wape": 0.11390085335061913
+    }
+  },
+  "holdout_start": "2025-10-02",
+  "holdout_end": "2025-12-30",
+  "train_end": "2025-10-01",
+  "rows": 4212,
+  "improvement_vs_baseline_mae_pct": 55.432906841955784,
+  "empirical_90_interval_holdout_coverage": 0.924074074074074,
+  "q90": 12.767946138413045,
+  "evaluation_protocol": "Rolling 1 dia: demanda real de D-1 fica disponível antes da previsão de D.",
+  "multi_day_limit": "Endpoint recursivo não foi validado para 7/14 dias; não reutilizar métricas de 1 dia.",
+  "versions": {
+    "seasonal_naive": {
+      "version": "7",
+      "file": "model_v7.joblib",
+      "run_id": "f97d0bcc6b1f4fbb9bd81669187702ce"
+    },
+    "ridge": {
+      "version": "8",
+      "file": "model_v8.joblib",
+      "run_id": "1d6aef420f10406cbbd0f173f7bc05d6"
+    },
+    "hist_gradient_boosting": {
+      "version": "9",
+      "file": "model_v9.joblib",
+      "run_id": "a42b839453b141fcb706643b2b3d7859"
+    }
+  }
+}
