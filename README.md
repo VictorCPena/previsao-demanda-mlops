@@ -1,69 +1,92 @@
-# Previsão de demanda com MLOps local
+# Previsão de Demanda | Um modelo até a inferência, com MLOps local
 
-Prever a demanda diária de produtos e disponibilizar o modelo por API, com rastreabilidade,
-comparação com baseline e promoção reversível. A entrega é um modelo registrado no MLflow e
-um serviço FastAPI; as métricas são diagnósticos do treino e da operação.
+**Machine Learning · Séries temporais · scikit-learn · MLflow · FastAPI · Monitoramento**
 
-## Treinar e validar
+> **Pergunta:** como prever a demanda diária de produtos, comparar o modelo com um baseline honesto e colocar uma versão rastreável para servir previsões — sem usar informação do futuro?
 
-Requer Python 3.12. Na raiz deste repositório:
+Este projeto cobre o **ciclo do modelo**: geração/validação dos dados, features temporais, seleção por validação cruzada, holdout, registro de versões, API de inferência e monitoramento. Tudo roda localmente, sem serviço pago.
+
+## O experimento de modelagem
+
+O dataset padrão é **sintético**: seis produtos, 730 dias por produto, com padrões sazonais e promoções simuladas. O modelo prevê **um dia à frente**, assumindo que a demanda real do dia anterior já foi observada.
+
+```mermaid
+flowchart LR
+  A[Histórico diário] --> B[Lags e médias sem vazamento]
+  B --> C[3 folds temporais]
+  C --> D[Seleção do campeão]
+  D --> E[Holdout 90 dias]
+  D --> F[Registro no MLflow]
+  F --> G[FastAPI /predict]
+  E --> H[Drift e erro observado]
+```
+
+**Protocolo:** divisão global por data (nenhum produto do mesmo dia fica em treino e validação simultaneamente); três folds *expanding window*, 42 dias por validação; seleção pela MAE média; últimos 90 dias reservados para avaliação. Compara **baseline sazonal D−7, Ridge e HistGradientBoosting**.
+
+### Resultado da execução sintética
+
+| Indicador no holdout de 1 dia | Valor observado |
+| --- | ---: |
+| Modelo selecionado na validação | **HistGradientBoosting** |
+| MAE | **5,95 unidades** |
+| RMSE | **7,61 unidades** |
+| WAPE | **11,34%** |
+| Redução de MAE frente ao baseline sazonal | **55,61%** |
+
+Métricas obtidas no cenário sintético executado em outubro/2026; use `make train` para gerar seus próprios resultados em `work/evaluation/treinamento.json`. **Não extrapole esses números para vendas reais ou previsões recursivas de 7/14 dias**. A faixa empírica decorre de resíduos de validação e não oferece garantia de cobertura.
+
+## Como executar
+
+Requer **Python 3.12**. Na raiz deste repositório:
 
 ```bash
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
-.venv/bin/python src/train.py
-.venv/bin/python src/monitor.py
-.venv/bin/python src/smoke.py
-.venv/bin/python -m pytest tests -q
+make test
+make train
+make monitor
+make smoke
 ```
 
-Windows: use `.venv\Scripts\python`. Atalhos opcionais: `make train`, `make monitor`,
-`make smoke`, `make test`. Cada etapa tem um comando próprio; monitor e smoke exigem treino prévio.
-Os dados padrão são sintéticos: seis produtos, 730 dias, semente 42.
+O `make test` trata `DeprecationWarning` como erro, para detectar incompatibilidades antecipadamente. O `make smoke` exercita API, promoção e retorno à versão anterior. O primeiro treino cria os artefatos necessários; monitoramento e smoke dependem dele.
 
-## Servir previsões
+### Testar a API
 
 ```bash
-.venv/bin/python -m uvicorn serve:app --app-dir src --host 127.0.0.1 --port 8000
+make api
 ```
 
-Em outro terminal:
+Com esse terminal aberto, em outro terminal na raiz do projeto:
 
 ```bash
 curl --fail http://127.0.0.1:8000/health
-curl --fail -H 'Content-Type: application/json' --data-binary @work/evaluation/exemplo_requisicao.json http://127.0.0.1:8000/predict
+curl --fail -H 'Content-Type: application/json' \
+  --data-binary @work/evaluation/exemplo_requisicao.json \
+  http://127.0.0.1:8000/predict
 ```
 
-O treino gera uma requisição compatível com os produtos e datas usados. `/predict` exige 28 dias
-contínuos até D-1. `/forecast` aceita horizonte 1–14 e `planned_promotions` por dia, com a primeira
-promoção igual a `promo`. A documentação interativa da API fica em http://127.0.0.1:8000/docs.
+Documentação interativa: **http://127.0.0.1:8000/docs**. O endpoint `/predict` requer 28 dias consecutivos até D−1; `/forecast` permite inferência recursiva de 1 a 14 dias, **ainda não validada empiricamente por horizonte**.
 
-## Ciclo do modelo
+### Rastreamento e operação
 
-Baseline D-7, Ridge e boosting disputam três folds temporais. A média MAE de validação escolhe
-o campeão antes da avaliação nos últimos 90 dias. Features usam somente informação passada.
-O holdout é rolling de **um dia**; não valida a precisão do endpoint recursivo de vários dias.
+```bash
+make mlflow
+```
 
-- `work/mlflow.db` e `work/mlartifacts/`: experimentos, métricas e registry locais.
-- `work/deployment.json`: versão ativa e caminhos usados pela API.
-- `work/evaluation/`: previsões de holdout, métricas, entrada de exemplo e diagnósticos regeneráveis.
+Interface local em **http://127.0.0.1:5000**. `work/mlflow.db` armazena experimentos/registry e `work/deployment.json` define a versão carregada pela API. Uma promoção troca a referência local; o smoke testa restauração. **Os modelos serializados só devem ser carregados de fontes confiáveis.**
 
-Esses arquivos nascem ao executar e não são versionados. `make mlflow` inicia a interface local
-em http://127.0.0.1:5000. Não é necessário criar conta ou contratar hospedagem.
+Monitoramento em `src/monitor.py` sinaliza distribuições de features (PSI/KS descritivo) e compara erro quando valores reais chegam. Alertas são **convites à investigação**, não retreino automático: sazonalidade e dependência temporal podem produzir falsos positivos.
 
-`src/promote.py NOME_DO_MODELO` troca a versão ativa. Use os nomes registrados em
-`work/evaluation/treinamento.json`; `src/smoke.py` exercita promoção, restauração do campeão e
-paridade de carregamento pelo MLflow. Alias e arquivo local não formam transação distribuída;
-refaça a promoção se falhar entre as etapas. A API usa o arquivo como fonte de verdade.
+## Decisões e limites
 
-Monitoramento usa PSI, KS descritivo e erros observados. Alertas pedem investigação, não
-iniciam retreino automático. Consulte `docs/MODEL_CARD.md` para hipóteses e limitações.
+| Escolha | Por quê |
+| --- | --- |
+| Features com `shift(1)` | Evitar vazamento da demanda do dia previsto |
+| CV temporal + holdout separado | Selecionar modelo sem escolher pelo conjunto de teste |
+| Registry local + versão ativa | Rastrear experimentos e permitir rollback |
+| API em `127.0.0.1` | Demonstração sem expor um serviço público não autenticado |
+| Monitorar antes de retreinar | Reduzir decisões baseadas apenas em alarmes heurísticos |
 
-## Dados próprios
+Código: `src/data.py` (features/splits), `src/train.py` (modelos/MLflow), `src/serve.py` (FastAPI), `src/promote.py` (versões), `src/monitor.py` (drift) e `tests/test_demand.py` (contratos). Detalhes e restrições: [`docs/MODEL_CARD.md`](docs/MODEL_CARD.md).
 
-`src/train.py --input /caminho/demanda.csv` aceita `day,product_id,units,promo`, com uma linha
-por produto/dia e sem lacunas. Promoções precisam ser conhecidas no instante da previsão.
-Documente origem, ruptura de estoque e significado de demanda antes de interpretar métricas.
-Modelos joblib/cloudpickle devem vir de fontes confiáveis. Serviço local, sem autenticação ou teste de carga.
-
-O workflow GitHub é manual e opcional; todo o fluxo pode ser executado no computador.
+**CI:** [workflow de inferência e validação](https://github.com/VictorCPena/previsao-demanda-mlops/actions/workflows/ci.yml) (manual). O projeto não é um sistema de previsão em produção, não tem autenticação pública, nem estudo de carga, cold start ou backtesting recursivo multihorizonte.
