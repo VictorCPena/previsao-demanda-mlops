@@ -1,0 +1,9 @@
+.git
+.github
+.venv
+work
+__pycache__
+.pytest_cache
+*.joblib
+*.pkl
+*.db
