@@ -1,7 +1,7 @@
 # Arquitetura e evidências
 
 ```mermaid
-flowchart LR
+flowchart TD
   A[Demanda sintética] --> B[Features com lags]
   B --> C[CV temporal]
   C --> D[Champion escolhido pela CV]

@@ -43,7 +43,7 @@ def main():
     for column in ("lag_1", "lag_7", "mean_7", "mean_28"):
         stressed[column] *= 2.5
     result["simulated_shift"] = drift(reference, stressed)
-    predictions = pd.read_csv(ROOT / "resultados/previsoes_holdout.csv", parse_dates=["day"])
+    predictions = pd.read_csv(ROOT / "work/evaluation/previsoes_holdout.csv", parse_dates=["day"])
     days = sorted(predictions.day.unique())
     middle = days[len(days)//2]
     early, late = predictions[predictions.day < middle], predictions[predictions.day >= middle]
@@ -52,7 +52,7 @@ def main():
     result["observed_error"] = {"reference_mae": early_mae, "current_mae": late_mae,
         "ratio": late_mae/max(early_mae, 1e-9), "review_needed": late_mae > 1.25*early_mae,
         "note": "Erro só pode ser monitorado depois da chegada dos valores reais."}
-    (ROOT / "resultados/monitoramento.json").write_text(json.dumps(result, indent=2, ensure_ascii=False))
+    (ROOT / "work/evaluation/monitoramento.json").write_text(json.dumps(result, indent=2, ensure_ascii=False))
     print(json.dumps(result, indent=2))
 
 

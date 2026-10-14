@@ -1,9 +1,0 @@
-{
-  "uvicorn_local_http": true,
-  "health": {
-    "status": "ok",
-    "model_ready": true
-  },
-  "prediction_model": "hist_gradient_boosting",
-  "prediction_version": "9"
-}

@@ -1,9 +1,12 @@
 # Previsão de demanda com MLOps local
 
-Laboratório de previsão diária de seis produtos com dois anos de dados sintéticos.
-Inclui baseline sazonal, Ridge, boosting, validação temporal, MLflow local, API e monitoramento.
+Prever a demanda diária de produtos e disponibilizar o modelo por API, com rastreabilidade,
+comparação com baseline e promoção reversível. A entrega é um modelo registrado no MLflow e
+um serviço FastAPI; as métricas são diagnósticos do treino e da operação.
 
-## Executar independentemente
+## Treinar e validar
+
+Requer Python 3.12. Na raiz deste repositório:
 
 ```bash
 python3 -m venv .venv
@@ -14,85 +17,53 @@ python3 -m venv .venv
 .venv/bin/python -m pytest tests -q
 ```
 
-Windows: substitua `.venv/bin/python` por `.venv\Scripts\python`.
-No pacote completo: `python executar.py mlops` usando o ambiente instalado.
+Windows: use `.venv\Scripts\python`. Atalhos opcionais: `make train`, `make monitor`,
+`make smoke`, `make test`. Cada etapa tem um comando próprio; monitor e smoke exigem treino prévio.
+Os dados padrão são sintéticos: seis produtos, 730 dias, semente 42.
 
-## API
+## Servir previsões
 
 ```bash
 .venv/bin/python -m uvicorn serve:app --app-dir src --host 127.0.0.1 --port 8000
 ```
 
-Abra http://127.0.0.1:8000/docs. Envie `resultados/exemplo_requisicao.json` para `/predict`.
-Para `/forecast`, acrescente `horizon` (1–14) e `planned_promotions` (uma entrada 0/1 por dia).
-`promo` deve coincidir com a primeira promoção planejada.
-
-Modelo e metadados são lidos da versão ativa. `/health` informa se o modelo está pronto. A API rejeita
-produto não treinado, histórico com lacuna/duplicata ou histórico que não termine em D-1.
-
-## MLflow
-
-O pacote completo tem `python executar.py mlflow`. Para este repositório isolado, use um caminho absoluto
-para seu banco ao executar `python -m mlflow server --backend-store-uri sqlite:////CAMINHO/ABSOLUTO/work/mlflow.db
---host 127.0.0.1 --port 5000`. No Windows, ajuste para o formato de URI SQLite correspondente ao disco.
-O banco e os artefatos são locais. O arquivo `work/deployment.json` registra o URI correto utilizado.
-
-## Promoção e rollback
-
-```bash
-.venv/bin/python src/promote.py seasonal_naive
-# Faça uma previsão e observe a versão.
-.venv/bin/python src/promote.py hist_gradient_boosting
-```
-
-O segundo comando é um exemplo: use o nome do campeão de `resultados/treinamento.json`.
-`src/smoke.py` testa promoção, volta ao campeão e carregamento do artefato registrado no MLflow.
-
-## Dados próprios
-
-CSV com `day,product_id,units,promo`; uma linha por produto/dia, sem lacunas e com produto no formato P00.
-Promoção deve ser conhecida no momento da previsão. Não confundir ausência de registro com demanda zero.
-
-```bash
-.venv/bin/python src/train.py --input /caminho/demanda.csv
-```
-
-Entradas externas têm procedência não verificada até você documentar origem e semântica.
-Os hiperparâmetros e folds desta versão são um ponto de partida; dados reais podem exigir outro desenho.
-
-Leia `docs/MODEL_CARD.md`: as métricas são de rolling **um dia**. O endpoint recursivo não tem
-validação multihorizonte. Modelos foram treinados apenas até o início do holdout e não retreinados com ele.
-Artefatos joblib/cloudpickle são gerados localmente pelo código; carregue somente artefatos de confiança.
-
-Os HTML e gráficos incluídos são snapshots da execução entregue. Para atualizá-los, use `gerar_relatorios.py` na raiz do pacote completo após executar os fluxos. CSV/JSON são atualizados pelos scripts deste projeto.
-
-## Versão portfólio · 1.1.0
-
-Compatibilidade com NumPy/Pandas no Python 3.13 melhorada nas comparações de datas. Os testes
-usam HTTPX/ASGI sem `fastapi.testclient` legado. `/` explica as rotas; `/health` exige que
-`work/deployment.json` aponte para um artefato existente (não valida a desserialização).
-O relatório atualizado está em `resultados/RESUMO_ATUAL.html`.
-
-```bash
-make setup
-make test
-make run
-make report
-make api
-```
-
-Em outro Terminal, com a API rodando:
+Em outro terminal:
 
 ```bash
 curl --fail http://127.0.0.1:8000/health
-curl --fail -H 'Content-Type: application/json' \
-  --data-binary @resultados/exemplo_requisicao.json \
-  http://127.0.0.1:8000/predict
+curl --fail -H 'Content-Type: application/json' --data-binary @work/evaluation/exemplo_requisicao.json http://127.0.0.1:8000/predict
 ```
 
-Use `make mlflow` para abrir o servidor local em http://127.0.0.1:5000 após o treino.
-O workflow `.github/workflows/ci.yml` roda testes e demonstração completa na nuvem do GitHub
-sob limites do plano aplicável; a aplicação e MLflow não precisam de deploy pago.
+O treino gera uma requisição compatível com os produtos e datas usados. `/predict` exige 28 dias
+contínuos até D-1. `/forecast` aceita horizonte 1–14 e `planned_promotions` por dia, com a primeira
+promoção igual a `promo`. A documentação interativa da API fica em http://127.0.0.1:8000/docs.
 
-**Próxima melhoria autoral:** validar previsões recursivas de 7 dias num holdout multihorizonte
-antes de atribuir métricas de 1 dia ao endpoint `/forecast`.
+## Ciclo do modelo
+
+Baseline D-7, Ridge e boosting disputam três folds temporais. A média MAE de validação escolhe
+o campeão antes da avaliação nos últimos 90 dias. Features usam somente informação passada.
+O holdout é rolling de **um dia**; não valida a precisão do endpoint recursivo de vários dias.
+
+- `work/mlflow.db` e `work/mlartifacts/`: experimentos, métricas e registry locais.
+- `work/deployment.json`: versão ativa e caminhos usados pela API.
+- `work/evaluation/`: previsões de holdout, métricas, entrada de exemplo e diagnósticos regeneráveis.
+
+Esses arquivos nascem ao executar e não são versionados. `make mlflow` inicia a interface local
+em http://127.0.0.1:5000. Não é necessário criar conta ou contratar hospedagem.
+
+`src/promote.py NOME_DO_MODELO` troca a versão ativa. Use os nomes registrados em
+`work/evaluation/treinamento.json`; `src/smoke.py` exercita promoção, restauração do campeão e
+paridade de carregamento pelo MLflow. Alias e arquivo local não formam transação distribuída;
+refaça a promoção se falhar entre as etapas. A API usa o arquivo como fonte de verdade.
+
+Monitoramento usa PSI, KS descritivo e erros observados. Alertas pedem investigação, não
+iniciam retreino automático. Consulte `docs/MODEL_CARD.md` para hipóteses e limitações.
+
+## Dados próprios
+
+`src/train.py --input /caminho/demanda.csv` aceita `day,product_id,units,promo`, com uma linha
+por produto/dia e sem lacunas. Promoções precisam ser conhecidas no instante da previsão.
+Documente origem, ruptura de estoque e significado de demanda antes de interpretar métricas.
+Modelos joblib/cloudpickle devem vir de fontes confiáveis. Serviço local, sem autenticação ou teste de carga.
+
+O workflow GitHub é manual e opcional; todo o fluxo pode ser executado no computador.

@@ -1,5 +1,5 @@
 name: CI | MLOps e inferencia
-on: [push, pull_request, workflow_dispatch]
+on: [workflow_dispatch]
 permissions:
   contents: read
 jobs:
@@ -23,10 +23,3 @@ jobs:
       - run: python src/train.py
       - run: python src/monitor.py
       - run: python src/smoke.py
-      - run: python src/summary_html.py
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: evidencias-mlops
-          path: resultados/
-          if-no-files-found: warn

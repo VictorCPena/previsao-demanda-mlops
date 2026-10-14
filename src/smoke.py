@@ -13,7 +13,7 @@ def main():
     workspace = ROOT/'work'
     deployment = json.loads((workspace/'deployment.json').read_text())
     champion = deployment['winner']
-    request = json.loads((ROOT/'resultados/exemplo_requisicao.json').read_text())
+    request = json.loads((ROOT/'work/evaluation/exemplo_requisicao.json').read_text())
     client = LocalTestClient(create_app())
     first = client.post('/predict',json=request)
     assert first.status_code == 200, first.text
@@ -39,7 +39,7 @@ def main():
     result = {'actual_trained_model_api':True,'recursive_endpoint':True,'promotion_and_rollback':True,
               'mlflow_registered_model_loaded':True,'first_prediction':first.json(),
               'recursive_demo':recursive.json()}
-    (ROOT/'resultados/api_smoke.json').write_text(json.dumps(result,indent=2,ensure_ascii=False))
+    (ROOT/'work/evaluation/api_smoke.json').write_text(json.dumps(result,indent=2,ensure_ascii=False))
     print('API com modelo treinado, registry, promoção e rollback: OK')
 
 

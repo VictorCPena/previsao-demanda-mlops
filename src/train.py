@@ -45,7 +45,7 @@ def configure_mlflow(work):
 
 def train(input_csv=None, work=None, output=None):
     work = Path(work or ROOT / "work")
-    output = Path(output or ROOT / "resultados")
+    output = Path(output or ROOT / "work/evaluation")
     work.mkdir(parents=True, exist_ok=True)
     output.mkdir(parents=True, exist_ok=True)
     if input_csv:
