@@ -1,0 +1,46 @@
+{
+  "source": "Terminal output supplied by the user from a localhost run on macOS",
+  "date": "2026-11-09",
+  "profile": "Historical replay with 200 observed hourly values; next observation held out from the request",
+  "health": {
+    "http_status": 200,
+    "ready": true
+  },
+  "zone": 74,
+  "target": "2025-04-01 03:00:00+00:00",
+  "horizon": 1,
+  "prediction": 5.866159223743839,
+  "lower90": 0,
+  "upper90": 12.343958365084873,
+  "model": "gradient_boosting",
+  "data_sha256": "d704ccf7a830ff42ffa388c308c0ef542c7c918ac35f24a48166fbb474a40be5",
+  "observed": 2.0,
+  "absolute_error": 3.866159223743839,
+  "scope": "One historical forecast, with single server-side timings and no interval coverage inference",
+  "crosscheck": {
+    "file": "evidence/holdout_predictions.csv",
+    "origin": "2025-04-01 02:00:00+00:00",
+    "exact_match": [
+      "prediction",
+      "lower90",
+      "upper90",
+      "observed"
+    ],
+    "same_dataset_fingerprint": true
+  },
+  "server_timing": {
+    "source": "Structured middleware events in the terminal attachment",
+    "terminal_log_sha256": "f6eaadd34ce10bf4219651120c5bed763504d7ebea9ee8f037a7c9547d9133e4",
+    "prior_instance": {
+      "port": 8000,
+      "health_handler_seconds": 15.812157,
+      "client_timeout_seconds": 10
+    },
+    "replay_instance": {
+      "port": 18000,
+      "health_handler_seconds": 2.270113,
+      "predict_handler_seconds": 0.174413
+    },
+    "scope": "Single server-side observations, without client round trip or capacity inference"
+  }
+}

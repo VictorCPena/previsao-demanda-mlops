@@ -6,7 +6,8 @@ import os
 from pathlib import Path
 from datetime import timedelta
 
-os.environ.setdefault("MLFLOW_ENABLE_TELEMETRY", "false")
+os.environ["MLFLOW_DISABLE_TELEMETRY"] = "true"
+os.environ["DO_NOT_TRACK"] = "true"
 os.environ.setdefault("MLFLOW_DISABLE_AGENT_HINT", "1")
 os.environ.setdefault("OMP_NUM_THREADS", "2")
 

@@ -1,0 +1,50 @@
+{
+  "endpoint": "/predict",
+  "transport": "actual HTTP on localhost",
+  "levels": [
+    {
+      "concurrency": 1,
+      "requests": 2,
+      "seconds": 0.0995046669995645,
+      "requests_per_second": 20.099559752395866,
+      "p50_ms": 48.42700049994164,
+      "p95_ms": 87.49304085013137,
+      "max_ms": 91.83371200015245,
+      "errors": 2,
+      "statuses": {
+        "422": 2
+      }
+    },
+    {
+      "concurrency": 4,
+      "requests": 2,
+      "seconds": 0.005277526000099897,
+      "requests_per_second": 378.9654470602594,
+      "p50_ms": 3.559358999837059,
+      "p95_ms": 3.691859699733868,
+      "max_ms": 3.7065819997224025,
+      "errors": 2,
+      "statuses": {
+        "422": 2
+      }
+    },
+    {
+      "concurrency": 8,
+      "requests": 2,
+      "seconds": 0.005278216000078828,
+      "requests_per_second": 378.9159064293941,
+      "p50_ms": 4.125085999930889,
+      "p95_ms": 4.589628199710205,
+      "max_ms": 4.641243999685685,
+      "errors": 2,
+      "statuses": {
+        "422": 2
+      }
+    }
+  ],
+  "restart_recovery": false,
+  "server_peak_rss_mb_max_child": 205.51953125,
+  "limits": "Local bounded study; no sustained saturation, distributed availability or production SLA demonstrated",
+  "expected_failure_verified": true,
+  "purpose": "The load runner must reject non-200 responses; intentionally unsupported forecast horizon"
+}

@@ -1,0 +1,48 @@
+{
+  "endpoint": "/predict",
+  "transport": "actual HTTP on localhost",
+  "levels": [
+    {
+      "concurrency": 1,
+      "requests": 24,
+      "seconds": 0.6043535220001104,
+      "requests_per_second": 39.71185593586334,
+      "p50_ms": 18.35609149998163,
+      "p95_ms": 41.21840360003259,
+      "max_ms": 146.11245100013548,
+      "errors": 0,
+      "statuses": {
+        "200": 24
+      }
+    },
+    {
+      "concurrency": 4,
+      "requests": 24,
+      "seconds": 0.4630651049997141,
+      "requests_per_second": 51.82856522953682,
+      "p50_ms": 75.88708150001366,
+      "p95_ms": 88.52492724981857,
+      "max_ms": 121.48551700011012,
+      "errors": 0,
+      "statuses": {
+        "200": 24
+      }
+    },
+    {
+      "concurrency": 8,
+      "requests": 24,
+      "seconds": 0.7298122199999852,
+      "requests_per_second": 32.88517147602774,
+      "p50_ms": 212.71486249997906,
+      "p95_ms": 347.804165350044,
+      "max_ms": 351.3302199999089,
+      "errors": 0,
+      "statuses": {
+        "200": 24
+      }
+    }
+  ],
+  "restart_recovery": true,
+  "server_peak_rss_mb_max_child": 206.9453125,
+  "limits": "Local bounded study; no sustained saturation, distributed availability or production SLA demonstrated"
+}
