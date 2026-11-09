@@ -1,0 +1,155 @@
+{
+  "1": {
+    "features": {
+      "zone": {
+        "ks": 0.007,
+        "p_value": 0.9999999999995582,
+        "review": false
+      },
+      "hour": {
+        "ks": 0.012806132542037586,
+        "p_value": 0.9995044880551187,
+        "review": false
+      },
+      "weekday": {
+        "ks": 0.015466864490603364,
+        "p_value": 0.992060967660095,
+        "review": false
+      },
+      "lag_origin": {
+        "ks": 0.022957467853610285,
+        "p_value": 0.8094129650391942,
+        "review": false
+      },
+      "lag_day": {
+        "ks": 0.025310583580613253,
+        "p_value": 0.7056671342484069,
+        "review": false
+      },
+      "lag_week": {
+        "ks": 0.024975272007912958,
+        "p_value": 0.7210097040343019,
+        "review": false
+      },
+      "mean24": {
+        "ks": 0.12507912957467854,
+        "p_value": 9.014532734755421e-11,
+        "review": false
+      },
+      "mean168": {
+        "ks": 0.23335509396636994,
+        "p_value": 1.2688195393235943e-36,
+        "review": true
+      }
+    },
+    "retraining": "Review if KS>.2, source freshness fails, or matured rolling MAE exceeds validation MAE by 25%; backtest candidate and retain rollback before promotion",
+    "matured": {
+      "mae": 2.2841492486455306,
+      "rmse": 3.4820628013054433,
+      "wape": 0.23128301784376645,
+      "review": false
+    }
+  },
+  "6": {
+    "features": {
+      "zone": {
+        "ks": 0.007666666666666666,
+        "p_value": 0.9999999999399404,
+        "review": false
+      },
+      "hour": {
+        "ks": 0.011483679525222551,
+        "p_value": 0.9999432281509997,
+        "review": false
+      },
+      "weekday": {
+        "ks": 0.012833827893175075,
+        "p_value": 0.9994851261901673,
+        "review": false
+      },
+      "lag_origin": {
+        "ks": 0.018310583580613254,
+        "p_value": 0.9566078755824263,
+        "review": false
+      },
+      "lag_day": {
+        "ks": 0.015700296735905044,
+        "p_value": 0.990526224746889,
+        "review": false
+      },
+      "lag_week": {
+        "ks": 0.02897527200791296,
+        "p_value": 0.5374388136273013,
+        "review": false
+      },
+      "mean24": {
+        "ks": 0.12207912957467854,
+        "p_value": 2.7898079042100247e-10,
+        "review": false
+      },
+      "mean168": {
+        "ks": 0.2340326409495549,
+        "p_value": 7.780115634633948e-37,
+        "review": true
+      }
+    },
+    "retraining": "Review if KS>.2, source freshness fails, or matured rolling MAE exceeds validation MAE by 25%; backtest candidate and retain rollback before promotion",
+    "matured": {
+      "mae": 2.548117776812857,
+      "rmse": 4.118750815789517,
+      "wape": 0.25801132285558614,
+      "review": false
+    }
+  },
+  "24": {
+    "features": {
+      "zone": {
+        "ks": 0.005666666666666667,
+        "p_value": 1.0,
+        "review": false
+      },
+      "hour": {
+        "ks": 0.003403560830860534,
+        "p_value": 1.0,
+        "review": false
+      },
+      "weekday": {
+        "ks": 0.03326706231454006,
+        "p_value": 0.3628545600976893,
+        "review": false
+      },
+      "lag_origin": {
+        "ks": 0.02571513353115727,
+        "p_value": 0.6870455828362998,
+        "review": false
+      },
+      "lag_day": {
+        "ks": 0.0200702274975272,
+        "p_value": 0.9132756708231493,
+        "review": false
+      },
+      "lag_week": {
+        "ks": 0.017641938674579624,
+        "p_value": 0.9685913206043234,
+        "review": false
+      },
+      "mean24": {
+        "ks": 0.13582195845697329,
+        "p_value": 1.2570562094232508e-12,
+        "review": false
+      },
+      "mean168": {
+        "ks": 0.231,
+        "p_value": 6.866873150024916e-36,
+        "review": true
+      }
+    },
+    "retraining": "Review if KS>.2, source freshness fails, or matured rolling MAE exceeds validation MAE by 25%; backtest candidate and retain rollback before promotion",
+    "matured": {
+      "mae": 2.4242437335865725,
+      "rmse": 3.68778018252221,
+      "wape": 0.24546837603769617,
+      "review": false
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "source": "NYC TLC green taxi Jan\u2013Mar 2025",
+  "sources": [
+    {
+      "file": "green_2025-01.parquet",
+      "sha256": "84f3a121667157efcbf012c3566a6065df6f8e0312c678cb2f29cd72cc9c0f10",
+      "rows": 48326
+    },
+    {
+      "file": "green_2025-02.parquet",
+      "sha256": "b3ffe16a96ba0c68c8a8f8b10f049294ae6eb8d21f2e13b3fdbd452fa2e3498e",
+      "rows": 46621
+    },
+    {
+      "file": "green_2025-03.parquet",
+      "sha256": "d58e8d08e5e8a34c12f0d3f5ea049ae25c7c8215218a6af7bf6b8124ecde1c79",
+      "rows": 51539
+    }
+  ],
+  "discarded_invalid_or_out_of_window": 480,
+  "selected_zones": [
+    74,
+    75,
+    43
+  ],
+  "grid_rows": 6477,
+  "trips_selected": 65876,
+  "aggregation": "UTC hour; all files Jan\u2013Mar required; zero = no published trip",
+  "limitations": "Published pickup demand, not unmet demand. Complete file assumed; source reporting gaps can mimic zero demand.",
+  "sha256": "d704ccf7a830ff42ffa388c308c0ef542c7c918ac35f24a48166fbb474a40be5"
+}

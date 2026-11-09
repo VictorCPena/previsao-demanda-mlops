@@ -1,0 +1,314 @@
+{
+  "neural_backend": "sklearn",
+  "source": "Real NYC TLC green taxi Jan\u2013Mar 2025",
+  "sha256": "d704ccf7a830ff42ffa388c308c0ef542c7c918ac35f24a48166fbb474a40be5",
+  "holdout_start": "2025-03-18 04:00:00+00:00",
+  "protocol": "Rolling origin; direct horizons 1,6,24 hours; labels embargoed by horizon; CV precedes final holdout",
+  "selection": {
+    "1": {
+      "winner": "gradient_boosting",
+      "cv": {
+        "seasonal_naive": 3.2222222222222223,
+        "persistence": 3.8601190476190474,
+        "moving_average": 7.584036044973545,
+        "ridge": 2.938366429689591,
+        "random_forest": 2.6760146547551242,
+        "gradient_boosting": 2.534442245669739,
+        "sklearn_mlp": 2.6095358956917574
+      },
+      "q90": 6.477799141341034
+    },
+    "6": {
+      "winner": "sklearn_mlp",
+      "cv": {
+        "seasonal_naive": 3.2222222222222223,
+        "persistence": 10.918650793650794,
+        "moving_average": 7.745081018518518,
+        "ridge": 3.3603632743786713,
+        "random_forest": 2.8040849982654414,
+        "gradient_boosting": 2.772574587940292,
+        "sklearn_mlp": 2.7598614547768627
+      },
+      "q90": 6.926193683806828
+    },
+    "24": {
+      "winner": "random_forest",
+      "cv": {
+        "seasonal_naive": 3.2222222222222223,
+        "persistence": 4.267857142857143,
+        "moving_average": 8.074280753968255,
+        "ridge": 2.9853833101337397,
+        "random_forest": 2.7210630820579356,
+        "gradient_boosting": 2.746986272955893,
+        "sklearn_mlp": 2.7506807928120764
+      },
+      "q90": 7.216598893030307
+    }
+  },
+  "per_zone_horizon": [
+    {
+      "horizon": 1,
+      "zone": 43,
+      "mae": 1.4200512685757345,
+      "rmse": 2.2144799727066524,
+      "wape": 0.43101827122081915,
+      "interval90_coverage": 0.9732142857142857
+    },
+    {
+      "horizon": 1,
+      "zone": 74,
+      "mae": 3.042824921567604,
+      "rmse": 4.500119762609557,
+      "wape": 0.1896122354686044,
+      "interval90_coverage": 0.8690476190476191
+    },
+    {
+      "horizon": 1,
+      "zone": 75,
+      "mae": 2.3895715557932546,
+      "rmse": 3.3495200595544103,
+      "wape": 0.2323194568132331,
+      "interval90_coverage": 0.9434523809523809
+    },
+    {
+      "horizon": 6,
+      "zone": 43,
+      "mae": 1.461852900672515,
+      "rmse": 2.1832563128132785,
+      "wape": 0.44370602947241644,
+      "interval90_coverage": 0.9821428571428571
+    },
+    {
+      "horizon": 6,
+      "zone": 74,
+      "mae": 3.548417468281519,
+      "rmse": 6.00633011957773,
+      "wape": 0.22111800247451602,
+      "interval90_coverage": 0.8720238095238095
+    },
+    {
+      "horizon": 6,
+      "zone": 75,
+      "mae": 2.597662145346383,
+      "rmse": 3.7113973110382754,
+      "wape": 0.2525504863531206,
+      "interval90_coverage": 0.9166666666666666
+    },
+    {
+      "horizon": 24,
+      "zone": 43,
+      "mae": 1.4138573322913004,
+      "rmse": 2.1984693443494345,
+      "wape": 0.42913826887974427,
+      "interval90_coverage": 0.9821428571428571
+    },
+    {
+      "horizon": 24,
+      "zone": 74,
+      "mae": 3.1461237505071447,
+      "rmse": 4.569180741735998,
+      "wape": 0.19604925448264104,
+      "interval90_coverage": 0.8988095238095238
+    },
+    {
+      "horizon": 24,
+      "zone": 75,
+      "mae": 2.712750117961274,
+      "rmse": 3.884390288721677,
+      "wape": 0.2637395948017905,
+      "interval90_coverage": 0.9285714285714286
+    }
+  ],
+  "interval": "Empirical absolute CV residuals; no guaranteed coverage under temporal dependence",
+  "metrics": [
+    {
+      "horizon": 1,
+      "model": "seasonal_naive",
+      "cv_mae": 3.2222222222222223,
+      "mae": 2.7301587301587302,
+      "rmse": 4.2365567030800735,
+      "wape": 0.2764439979909593,
+      "run_id": "9d95740bf1794e949543db472062ecbf"
+    },
+    {
+      "horizon": 1,
+      "model": "persistence",
+      "cv_mae": 3.8601190476190474,
+      "mae": 3.7688492063492065,
+      "rmse": 6.099456780392252,
+      "wape": 0.3816172777498744,
+      "run_id": "d902ff43d8cc47d79512a0bb2661ced3"
+    },
+    {
+      "horizon": 1,
+      "model": "moving_average",
+      "cv_mae": 7.584036044973545,
+      "mae": 7.519386574074074,
+      "rmse": 10.445809349534434,
+      "wape": 0.7613803783693287,
+      "run_id": "aaee6f2294fc40e8a336cfd61c8d08bf"
+    },
+    {
+      "horizon": 1,
+      "model": "ridge",
+      "cv_mae": 2.938366429689591,
+      "mae": 2.581089801517902,
+      "rmse": 3.8920924002399504,
+      "wape": 0.26134992666298795,
+      "run_id": "b9fdada8a14d4aea83986e321a7655e7"
+    },
+    {
+      "horizon": 1,
+      "model": "random_forest",
+      "cv_mae": 2.6760146547551242,
+      "mae": 2.284814763336216,
+      "rmse": 3.5115324817589793,
+      "wape": 0.23135040496664044,
+      "run_id": "52109b46035447b6bb06ef445832d176"
+    },
+    {
+      "horizon": 1,
+      "model": "gradient_boosting",
+      "cv_mae": 2.534442245669739,
+      "mae": 2.2841492486455306,
+      "rmse": 3.4820628013054433,
+      "wape": 0.23128301784376645,
+      "run_id": "72d1ae39a49444cda2d2a542c188d49c"
+    },
+    {
+      "horizon": 1,
+      "model": "sklearn_mlp",
+      "cv_mae": 2.6095358956917574,
+      "mae": 2.375522158813216,
+      "rmse": 3.668620862513009,
+      "wape": 0.24053504129419603,
+      "run_id": "416c733629ab4674aef4e7dedcc2324a"
+    },
+    {
+      "horizon": 6,
+      "model": "seasonal_naive",
+      "cv_mae": 3.2222222222222223,
+      "mae": 2.7301587301587302,
+      "rmse": 4.2365567030800735,
+      "wape": 0.2764439979909593,
+      "run_id": "a288cb1cb7c647458e720961590615ff"
+    },
+    {
+      "horizon": 6,
+      "model": "persistence",
+      "cv_mae": 10.918650793650794,
+      "mae": 10.702380952380953,
+      "rmse": 15.2767459969055,
+      "wape": 1.0836765444500251,
+      "run_id": "5d1ea262c68645678a02e58341500463"
+    },
+    {
+      "horizon": 6,
+      "model": "moving_average",
+      "cv_mae": 7.745081018518518,
+      "mae": 7.636946097883597,
+      "rmse": 10.638261302798826,
+      "wape": 0.773283944416541,
+      "run_id": "149123b1f8114e6f9e53f5f4300d7d31"
+    },
+    {
+      "horizon": 6,
+      "model": "ridge",
+      "cv_mae": 3.3603632743786713,
+      "mae": 2.888285224475115,
+      "rmse": 4.145030098766798,
+      "wape": 0.29245519902269373,
+      "run_id": "faa15eebb3b240029ba752de0efeea07"
+    },
+    {
+      "horizon": 6,
+      "model": "random_forest",
+      "cv_mae": 2.8040849982654414,
+      "mae": 2.6407296239794804,
+      "rmse": 4.101290324305159,
+      "wape": 0.2673887956776812,
+      "run_id": "5d0d4dc1a56140dd84825f5b965b68ec"
+    },
+    {
+      "horizon": 6,
+      "model": "gradient_boosting",
+      "cv_mae": 2.772574587940292,
+      "mae": 2.548117776812857,
+      "rmse": 4.118750815789517,
+      "wape": 0.25801132285558614,
+      "run_id": "96c18eb58e7f4b9180fdc3d710a52883"
+    },
+    {
+      "horizon": 6,
+      "model": "sklearn_mlp",
+      "cv_mae": 2.7598614547768627,
+      "mae": 2.5359775047668056,
+      "rmse": 4.266813003994425,
+      "wape": 0.2567820517132034,
+      "run_id": "be2e736f60154b2aa1f4d8ef03fe1da9"
+    },
+    {
+      "horizon": 24,
+      "model": "seasonal_naive",
+      "cv_mae": 3.2222222222222223,
+      "mae": 2.7301587301587302,
+      "rmse": 4.2365567030800735,
+      "wape": 0.2764439979909593,
+      "run_id": "a0f5125bb8ad49ae94e588c4978532a7"
+    },
+    {
+      "horizon": 24,
+      "model": "persistence",
+      "cv_mae": 4.267857142857143,
+      "mae": 4.084325396825397,
+      "rmse": 7.432300269875222,
+      "wape": 0.41356102461074834,
+      "run_id": "ceac46352eee4aa19f8fee4ce5cbdd98"
+    },
+    {
+      "horizon": 24,
+      "model": "moving_average",
+      "cv_mae": 8.074280753968255,
+      "mae": 7.910507605820105,
+      "rmse": 10.774890131413201,
+      "wape": 0.8009835928344216,
+      "run_id": "15424bbe96e74c3d8f077b0b6ebae70c"
+    },
+    {
+      "horizon": 24,
+      "model": "ridge",
+      "cv_mae": 2.9853833101337397,
+      "mae": 2.6681617028621774,
+      "rmse": 4.078073391741629,
+      "wape": 0.27016644866751127,
+      "run_id": "cd89d0cb155d4762b7482dd232dddd6f"
+    },
+    {
+      "horizon": 24,
+      "model": "random_forest",
+      "cv_mae": 2.7210630820579356,
+      "mae": 2.424243733586573,
+      "rmse": 3.68778018252221,
+      "wape": 0.2454683760376962,
+      "run_id": "9b19372c46a542ab903189e9f7e724a6"
+    },
+    {
+      "horizon": 24,
+      "model": "gradient_boosting",
+      "cv_mae": 2.746986272955893,
+      "mae": 2.5557068753058556,
+      "rmse": 3.813299688344518,
+      "wape": 0.2587797619596487,
+      "run_id": "1754c55ae81948299c44971eb5039962"
+    },
+    {
+      "horizon": 24,
+      "model": "sklearn_mlp",
+      "cv_mae": 2.7506807928120764,
+      "mae": 2.5430883874110495,
+      "rmse": 3.9832984264797835,
+      "wape": 0.25750206876045584,
+      "run_id": "412f0e10f00843cd80aa41fd920c3fd9"
+    }
+  ]
+}
